@@ -1,4 +1,5 @@
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Figlet&version=1.0.0"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Npx&version=1.0.0"
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -22,6 +23,12 @@ var isRunningOnAppveyorMasterBranch = StringComparer.OrdinalIgnoreCase.Equals(
 );
 var shouldRelease = !isLocalBuild && isRunningOnAppveyorMasterBranch;
 var changesDetectedSinceLastRelease = false;
+
+Action<NpxSettings> requiredSemanticVersionPackages = settings => settings
+    .AddPackage("semantic-release@13.1.1")
+    .AddPackage("@semantic-release/changelog@1.0.0")
+    .AddPackage("@semantic-release/git@3.0.0")
+    .AddPackage("@semantic-release/exec@2.0.0");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -95,7 +102,11 @@ Task("Get next semantic version number")
 {
     Information("Running semantic-release in dry run mode to extract next semantic version number");
 
-    var semanticReleaseOutput = ExecuteSemanticRelease(Context, dryRun: true);
+    string[] semanticReleaseOutput;
+    Npx("semantic-release", "--dry-run", requiredSemanticVersionPackages, out semanticReleaseOutput);
+
+    Information(string.Join(Environment.NewLine, semanticReleaseOutput));
+
     var nextSemanticVersionNumber = ExtractNextSemanticVersionNumber(semanticReleaseOutput);
 
     if (nextSemanticVersionNumber == null) {
@@ -180,7 +191,7 @@ Task("Release")
     Information("Creating github release");
     Information("Pushing to NuGet");
 
-    ExecuteSemanticRelease(Context, dryRun: false);
+    Npx("semantic-release", requiredSemanticVersionPackages);
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -192,35 +203,6 @@ RunTarget(target);
 ///////////////////////////////////////////////////////////////////////////////
 // Helpers
 ///////////////////////////////////////////////////////////////////////////////
-
-string[] ExecuteSemanticRelease(ICakeContext context, bool dryRun)
-{
-    var npxPath = Context.Tools.Resolve("npx.cmd");
-    if (npxPath == null) throw new Exception("Could not locate npx.cmd");
-
-    IEnumerable<string> redirectedStandardOutput;
-
-    var exitCode = StartProcess(
-        npxPath,
-        new ProcessSettings()
-            .SetRedirectStandardOutput(true)
-            .WithArguments(args => args
-                .AppendSwitch("-p", "semantic-release@next")
-                .AppendSwitch("-p", "@semantic-release/changelog")
-                .AppendSwitch("-p", "@semantic-release/git")
-                .AppendSwitch("-p", "@semantic-release/exec")
-                .Append("semantic-release")
-                .Append(dryRun ? "--dry-run" : "")),
-        out redirectedStandardOutput);
-
-    var semanticReleaseOutput = redirectedStandardOutput.ToArray();
-    Information(string.Join(Environment.NewLine, semanticReleaseOutput));
-
-    if (exitCode != 0)
-        throw new Exception($"npx: Process returned an error (exit code {exitCode}).");
-
-    return semanticReleaseOutput;
-}
 
 string ExtractNextSemanticVersionNumber(string[] semanticReleaseOutput)
 {
