@@ -4,7 +4,9 @@ environment:
   NUGET_TOKEN:
     secure: HG2hrWYW66cORRkypXxoGtSjM6OV+Lm8Qxl/6vxX6JobeMe0Nrdd09ritNUIUaty
 
-image: Visual Studio 2017
+# semantic-version requires node > 8.3
+install:
+  - ps: Install-Product node 9
 
 build_script:
   - ps: .\build.ps1
