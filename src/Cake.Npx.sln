@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cake.Npx", "Cake.Npx\Cake.Npx.csproj", "{B065B3E4-732F-49E9-9F4E-AC53505216A8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cake.Npx.Tests", "Cake.Npx.Tests\Cake.Npx.Tests.csproj", "{E66AFE44-0FC1-4331-80DE-ED383945F317}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B065B3E4-732F-49E9-9F4E-AC53505216A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B065B3E4-732F-49E9-9F4E-AC53505216A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B065B3E4-732F-49E9-9F4E-AC53505216A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B065B3E4-732F-49E9-9F4E-AC53505216A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E66AFE44-0FC1-4331-80DE-ED383945F317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E66AFE44-0FC1-4331-80DE-ED383945F317}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E66AFE44-0FC1-4331-80DE-ED383945F317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E66AFE44-0FC1-4331-80DE-ED383945F317}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D0386F5-246B-4BBD-B8E8-BF1B0A8876F0}
+	EndGlobalSection
+EndGlobal

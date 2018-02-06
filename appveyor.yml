@@ -1,0 +1,15 @@
+environment:
+  GITHUB_TOKEN:
+    secure: p0GrMwBfnOtyKmChaxAbTUnx2uZQ+vwMdVCVNjMUhVNgzWukUHBOcs2XGR0uQNlf
+  NUGET_TOKEN:
+    secure: HG2hrWYW66cORRkypXxoGtSjM6OV+Lm8Qxl/6vxX6JobeMe0Nrdd09ritNUIUaty
+
+image: Visual Studio 2017
+
+build_script:
+  - ps: .\build.ps1
+
+test: off
+
+cache:
+- tools -> build.cake

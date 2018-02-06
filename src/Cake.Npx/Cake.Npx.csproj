@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
+    <Authors>Michael Wolfenden</Authors>
+    <Description>A set of aliases for Cake for running Npx commands</Description>
+    <PackageProjectUrl>https://github.com/michael-wolfenden/Cake.Npx</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/michael-wolfenden/Cake.Npx</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/michael-wolfenden/Cake.Npx/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType></RepositoryType>
+    <PackageIconUrl>https://cdn.rawgit.com/cake-contrib/graphics/a5cf0f881c390650144b2243ae551d5b9f836196/png/cake-contrib-medium.png</PackageIconUrl>
+    <PackageTags>cake npx cake-build</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cake.Core" Version="0.22.0" />
+  </ItemGroup>
+
+</Project>
