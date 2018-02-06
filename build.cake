@@ -172,7 +172,7 @@ Task("Package")
 
 Task("Release")
     .WithCriteria(shouldRelease)
-    .WithCriteria(changesDetectedSinceLastRelease)
+    .WithCriteria(() => changesDetectedSinceLastRelease)
     .Does(() =>
 {
     Information("Releasing v{0}", releaseVersion);
