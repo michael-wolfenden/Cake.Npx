@@ -1,5 +1,7 @@
 # Cake.Npx
 
+[![appveyor](https://img.shields.io/appveyor/ci/michael-wolfenden/cake-npx.svg?style=flat?style=flat-square)](https://ci.appveyor.com/project/michael-wolfenden/cake-npx)
+[![nuget](https://img.shields.io/nuget/v/Cake.Npx.svg?style=flat-square)](https://www.nuget.org/packages/Cake.Npx/)
 [![MIT License](https://img.shields.io/npm/l/starwars-names.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 
@@ -16,20 +18,28 @@ In your cake script add the following line (replacing version with the version y
 ## Usage
 
 ```csharp
+// =============================================================
 // Executes npx with the specified command.
+// =============================================================
 Npx("semantic-release");
 
-// Executes npx with the specified command and captures the standard output.
+// =============================================================
+// Executes npx with the specified command and captures the
+// standard output.
+// =============================================================
 string[] redirectedStandardOutput = null;
-
 Npx("semantic-release", out redirectedStandardOutput);
 
+// =============================================================
 // Executes npx with the specified command and additional arguments.
+// =============================================================
 Npx("semantic-release", "--dry-run");
-
 Npx("semantic-release", args => args.Append("--dry-run"));
 
-// Executes npx with the specified command and additional arguments and captures the standard output.
+// =============================================================
+// Executes npx with the specified command and additional arguments
+// and captures the standard output.
+// =============================================================
 string[] redirectedStandardOutput = null;
 
 Npx("semantic-release",
@@ -40,18 +50,25 @@ Npx("semantic-release",
     args => args.Append("--dry-run"),
     out redirectedStandardOutput);
 
+// =============================================================
 // Executes npx with the specified command and additional packages.
+// ========================================
 Npx("semantic-release",
     settings => settings.AddPackage("@semantic-release/git"));
 
-// Executes npx with the specified command and additional packages and captures the standard output.
+// Executes npx with the specified command and additional packages
+// and captures the standard output.
+// =============================================================
 string[] redirectedStandardOutput = null;
 
 Npx("semantic-release",
     settings => settings.AddPackage("@semantic-release/git"),
     out redirectedStandardOutput);
 
-// Executes npx with the specified command, additional arguments and packages.
+// =============================================================
+// Executes npx with the specified command, additional arguments
+// and packages.
+// =============================================================
 Npx("semantic-release",
     "--dry-run",
     settings => settings.AddPackage("@semantic-release/git"));
@@ -60,7 +77,10 @@ Npx("semantic-release",
     args => args.Append("--dry-run"),
     settings => settings.AddPackage("@semantic-release/git"));
 
-// Executes npx with the specified command, additional arguments and packages and captures the standard output.
+// =============================================================
+// Executes npx with the specified command, additional arguments
+// and packages and captures the standard output.
+// =============================================================
 string[] redirectedStandardOutput = null;
 
 Npx("semantic-release",
