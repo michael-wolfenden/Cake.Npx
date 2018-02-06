@@ -73,7 +73,6 @@ namespace Cake.Npx.Tests
             result.Args.Should().Be("-p \"a package\" -p \"another package\" command --argument");
         }
 
-
         [Fact]
         public void Should_add_distinct_packages_and_additional_fluent_arguments_to_arguments()
         {
@@ -90,6 +89,39 @@ namespace Cake.Npx.Tests
             });
 
             result.Args.Should().Be("-p \"a package\" -p \"another package\" command --argument");
+        }
+
+        [Fact]
+        public void Should_add_ignore_existing_flag_to_arguments()
+        {
+            var result = new NpxFixture().Execute(context =>
+            {
+                context.Npx(
+                    "command",
+                    settings => settings.IgnoringExisting()
+                );
+            });
+
+            result.Args.Should().Be("--ignore-existing command");
+        }
+
+        [Fact]
+        public void Should_add_all_arguments()
+        {
+            var result = new NpxFixture().Execute(context =>
+            {
+                context.Npx(
+                    "command",
+                    args => args.Append("--argument"),
+                    settings => settings
+                        .AddPackage("a package")
+                        .AddPackage("a package")
+                        .AddPackage("another package")
+                        .IgnoringExisting()
+                );
+            });
+
+            result.Args.Should().Be("-p \"a package\" -p \"another package\" --ignore-existing command --argument");
         }
 
         [Fact]

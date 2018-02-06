@@ -42,6 +42,11 @@ namespace Cake.Npx
         public HashSet<string> Packages { get; }
 
         /// <summary>
+        /// Gets the list of packages which should be installed.
+        /// </summary>
+        public bool IgnoreExisting { get; private set; }
+
+        /// <summary>
         /// Install a package by name.
         /// </summary>
         /// <param name="packageName">Name of the package.</param>
@@ -57,12 +62,31 @@ namespace Cake.Npx
         }
 
         /// <summary>
+        /// Instruct npx not to look in $PATH, or in the current package's node_modules/.bin for an
+        /// existing version before deciding whether to install
+        /// </summary>
+        /// <returns>The settings instance with ignore existing set.</returns>
+        public NpxSettings IgnoringExisting()
+        {
+            IgnoreExisting = true;
+            return this;
+        }
+
+        /// <summary>
         /// Evaluates the settings and writes them to <paramref name="arguments"/>.
         /// </summary>
         /// <param name="arguments">The argument builder into which the settings should be written.</param>
         public void Evaluate(ProcessArgumentBuilder arguments)
         {
-            foreach (var package in Packages) arguments.AppendSwitchQuoted("-p", package);
+            foreach (var package in Packages)
+            {
+                arguments.AppendSwitchQuoted("-p", package);
+            }
+
+            if (IgnoreExisting)
+            {
+                arguments.Append("--ignore-existing");
+            }
 
             arguments.Append(Command);
 
