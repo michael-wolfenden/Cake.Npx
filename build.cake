@@ -126,18 +126,10 @@ Task("Build solution")
     {
         Information("Building solution {0} v{1}", solution.GetFilenameWithoutExtension(), releaseVersion);
 
-        var assemblyVersion = $"{releaseVersion}.0";
-
         DotNetCoreBuild(solution.FullPath, new DotNetCoreBuildSettings()
         {
             Configuration = configuration,
-            MSBuildSettings = new DotNetCoreMSBuildSettings()
-                .WithProperty("Version", assemblyVersion)
-                .WithProperty("AssemblyVersion", assemblyVersion)
-                .WithProperty("FileVersion", assemblyVersion)
-                // 0 = use as many processes as there are available CPUs to build the project
-                // see: https://develop.cakebuild.net/api/Cake.Common.Tools.MSBuild/MSBuildSettings/60E763EA
-                .SetMaxCpuCount(0)
+            MSBuildSettings = GetMSBuildSettings(releaseVersion)
         });
     }
 });
@@ -167,16 +159,11 @@ Task("Package")
 
         Information("Packaging project {0} v{1}", project.GetFilenameWithoutExtension(), releaseVersion);
 
-        var assemblyVersion = $"{releaseVersion}.0";
-
         DotNetCorePack(project.FullPath, new DotNetCorePackSettings {
             Configuration = configuration,
             OutputDirectory = artifactsDir,
             NoBuild = true,
-            MSBuildSettings = new DotNetCoreMSBuildSettings()
-                .WithProperty("Version", assemblyVersion)
-                .WithProperty("AssemblyVersion", assemblyVersion)
-                .WithProperty("FileVersion", assemblyVersion)
+            MSBuildSettings = GetMSBuildSettings(releaseVersion)
         });
     }
 });
@@ -212,4 +199,16 @@ string ExtractNextSemanticVersionNumber(string[] semanticReleaseOutput)
         .Select(line => extractRegEx.Match(line).Groups["SemanticVersionNumber"].Value)
         .Where(line => !string.IsNullOrWhiteSpace(line))
         .SingleOrDefault();
+}
+
+DotNetCoreMSBuildSettings GetMSBuildSettings(string releaseVersion) {
+    var assemblyVersion = $"{releaseVersion}.0";
+
+    return new DotNetCoreMSBuildSettings()
+        .WithProperty("Version", assemblyVersion)
+        .WithProperty("AssemblyVersion", assemblyVersion)
+        .WithProperty("FileVersion", assemblyVersion)
+        // 0 = use as many processes as there are available CPUs to build the project
+        // see: https://develop.cakebuild.net/api/Cake.Common.Tools.MSBuild/MSBuildSettings/60E763EA
+        .SetMaxCpuCount(0);
 }
