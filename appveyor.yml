@@ -13,5 +13,7 @@ build_script:
 
 test: off
 
+skip_tags: true
+
 cache:
 - tools -> build.cake
