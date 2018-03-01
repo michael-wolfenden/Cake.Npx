@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Authors>Michael Wolfenden</Authors>
     <Description>A set of aliases for Cake for running Npx commands</Description>
     <PackageProjectUrl>https://github.com/michael-wolfenden/Cake.Npx</PackageProjectUrl>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cake.Core" Version="0.22.0" />
+    <PackageReference Include="Cake.Core" Version="0.26.0" />
   </ItemGroup>
 
 </Project>
