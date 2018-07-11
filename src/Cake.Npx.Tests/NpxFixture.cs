@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cake.Core;
@@ -39,7 +39,8 @@ namespace Cake.Npx.Tests
                 Substitute.For<ICakeArguments>(),
                 ProcessRunner,
                 Substitute.For<IRegistry>(),
-                Tools
+                Tools,
+                Substitute.For<ICakeDataService>()
             );
 
             action(context);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Cake.Core;
 using Cake.Core.Annotations;
 using Cake.Core.IO;
@@ -23,9 +23,8 @@ namespace Cake.Npx
         public static void Npx(
             this ICakeContext context,
             string command)
-        {
+        =>
             context.Npx(command, new ProcessArgumentBuilder());
-        }
 
         /// <summary>
         /// Executes npx with the specified command and captures the standard output.
@@ -47,9 +46,8 @@ namespace Cake.Npx
             this ICakeContext context,
             string command,
             out string[] redirectedStandardOutput)
-        {
+        =>
             context.Npx(command, new ProcessArgumentBuilder(), out redirectedStandardOutput);
-        }
 
         /// <summary>
         /// Executes npx with the specified command and additional arguments.
@@ -69,9 +67,8 @@ namespace Cake.Npx
             this ICakeContext context,
             string command,
             ProcessArgumentBuilder arguments)
-        {
+        =>
             context.Npx(new NpxSettings(command, arguments));
-        }
 
         /// <summary>
         /// Executes npx with the specified command and additional arguments and captures the standard output.
@@ -95,9 +92,8 @@ namespace Cake.Npx
             string command,
             ProcessArgumentBuilder arguments,
             out string[] redirectedStandardOutput)
-        {
+        =>
             context.Npx(new NpxSettings(command, arguments), out redirectedStandardOutput);
-        }
 
         /// <summary>
         /// Executes npx with the specified command and additional arguments.
@@ -173,9 +169,8 @@ namespace Cake.Npx
             this ICakeContext context,
             string command,
             Action<NpxSettings> configureSettings)
-        {
+        =>
             context.Npx(command, default(Action<ProcessArgumentBuilder>), configureSettings);
-        }
 
         /// <summary>
         /// Executes npx with the specified command and configured settings and captures the standard output.
@@ -201,13 +196,12 @@ namespace Cake.Npx
             string command,
             Action<NpxSettings> configureSettings,
             out string[] redirectedStandardOutput)
-        {
+        =>
             context.Npx(
                 command,
                 default(Action<ProcessArgumentBuilder>),
                 configureSettings,
                 out redirectedStandardOutput);
-        }
 
         /// <summary>
         /// Executes npx with the specified command, additional arguments and configured settings.

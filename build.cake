@@ -1,45 +1,30 @@
-#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Figlet&version=1.0.0"
-#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Npx&version=1.0.0"
-
-///////////////////////////////////////////////////////////////////////////////
-// ARGUMENTS
-///////////////////////////////////////////////////////////////////////////////
-
-var target = Argument<string>("target", "Default");
-var configuration = Argument<string>("configuration", "Release");
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Figlet&version=1.1.0"
+#addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Npx&version=1.2.0"
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
 ///////////////////////////////////////////////////////////////////////////////
 
 var projectName = "Cake.Npx";
-var releaseVersion = "0.0.0";
-var artifactsDir =  Directory("./artifacts");
-
-var isLocalBuild = BuildSystem.IsLocalBuild;
-var isRunningOnAppveyorMasterBranch = StringComparer.OrdinalIgnoreCase.Equals(
-    "master",
-    BuildSystem.AppVeyor.Environment.Repository.Branch
-);
-var shouldRelease = !isLocalBuild && isRunningOnAppveyorMasterBranch;
-var changesDetectedSinceLastRelease = false;
+var buildContext = new BuildContext(projectName, Context);
 
 Action<NpxSettings> requiredSemanticVersionPackages = settings => settings
-    .AddPackage("semantic-release@13.1.1")
-    .AddPackage("@semantic-release/changelog@1.0.0")
-    .AddPackage("@semantic-release/git@3.0.0")
-    .AddPackage("@semantic-release/exec@2.0.0");
+    .AddPackage("semantic-release@15.6.3")
+    .AddPackage("@semantic-release/changelog@2.1.1")
+    .AddPackage("@semantic-release/git@6.0.1")
+    .AddPackage("@semantic-release/exec@2.2.4");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
 ///////////////////////////////////////////////////////////////////////////////
 
-Setup(context =>
+Setup<BuildContext>(_ =>
 {
-    Information(Figlet(projectName));
-    Information("Local build {0}", isLocalBuild);
-    Information("Running on appveyor master branch {0}", isRunningOnAppveyorMasterBranch);
-    Information("Should release {0}", shouldRelease);
+    Information(Figlet(buildContext.ProjectName));
+    Information("Target {0}", buildContext.Target);
+    Information("Configuration {0}", buildContext.Configuration);
+
+    return buildContext;
 });
 
 Teardown(context =>
@@ -55,16 +40,16 @@ Task("Default")
     .IsDependentOn("Build");
 
 Task("Build")
-    .IsDependentOn("Run dotnet --info")
+    .IsDependentOn("Run_dotnet_info")
     .IsDependentOn("Clean")
-    .IsDependentOn("Get next semantic version number")
-    .IsDependentOn("Build solution")
-    .IsDependentOn("Run tests")
+    .IsDependentOn("Get_next_release_number")
+    .IsDependentOn("Build_solution")
+    .IsDependentOn("Run_tests")
     .IsDependentOn("Package")
     .IsDependentOn("Release")
     ;
 
-Task("Run dotnet --info")
+Task("Run_dotnet_info")
     .Does(() =>
 {
     Information("dotnet --info");
@@ -72,108 +57,118 @@ Task("Run dotnet --info")
 });
 
 Task("Clean")
-    .Does(() =>
+    .Does<BuildContext>(buildContext =>
 {
-    Information("Cleaning {0}, bin and obj folders", artifactsDir);
+    Information("Cleaning {0}, bin and obj folders", buildContext.ArtifactsDir);
 
-    CleanDirectory(artifactsDir);
+    CleanDirectory(buildContext.ArtifactsDir);
     CleanDirectories("./src/**/bin");
     CleanDirectories("./src/**/obj");
 });
 
 /*
-Normally this task should only run based on the 'shouldRelease' condition,
+Normally this task should only run based on the 'IsRunningOnAppveyorMasterBranch' condition,
 however sometimes you want to run this locally to preview the next sematic version
 number and changlelog.
 
 To do this run the following locally:
 > $env:NUGET_TOKEN="insert_token_here"
 > $env:GITHUB_TOKEN="insert_token_here"
-> .\build.ps1  -ScriptArgs '-target="Get next semantic version number"'
+> .\build.ps1 -target Get_next_release_number
 
 NOTE: The GITHUB_TOKEN environment variable will need to be set
 so that semantic-release can access the repository
-
-Explicitly setting the target will override the 'shouldRelease' condition
 */
-Task("Get next semantic version number")
-    .WithCriteria(shouldRelease || target == "Get next semantic version number" )
-    .Does(() =>
+Task("Get_next_release_number")
+    .WithCriteria<BuildContext>(
+        (_, buildContext) => buildContext.IsRunningOnAppveyorMasterBranch ||
+                             buildContext.Target == "Get_next_release_number",
+        "Skipped as build not triggered by Appveyor 'master' branch commit"
+    )
+    .Does<BuildContext>(buildContext =>
 {
-    Information("Running semantic-release in dry run mode to extract next semantic version number");
+    Information("Running semantic-release in dry run mode to extract next release number");
 
     string[] semanticReleaseOutput;
     Npx("semantic-release", "--dry-run", requiredSemanticVersionPackages, out semanticReleaseOutput);
 
     Information(string.Join(Environment.NewLine, semanticReleaseOutput));
 
-    var nextSemanticVersionNumber = ExtractNextSemanticVersionNumber(semanticReleaseOutput);
+    var hasReleaseVersionChanged = buildContext.SetReleaseVersionFrom(semanticReleaseOutput);
 
-    if (nextSemanticVersionNumber == null) {
-        Warning("There are no relevant changes, skipping release");
-    } else {
-        Information("Next semantic version number is {0}", nextSemanticVersionNumber);
-        releaseVersion = nextSemanticVersionNumber;
-        changesDetectedSinceLastRelease = true;
-    }
+    if (hasReleaseVersionChanged)
+        Information("Next release number is {0}", buildContext.ReleaseVersion);
+    else
+        Warning("There are no relevant changes, skipping publish to nuget");
 });
 
-Task("Build solution")
-    .Does(() =>
+Task("Build_solution")
+    .Does<BuildContext>(buildContext =>
 {
-    var solutions = GetFiles("./src/*.sln");
-    foreach(var solution in solutions)
+    foreach(var solution in buildContext.Solutions)
     {
-        Information("Building solution {0} v{1}", solution.GetFilenameWithoutExtension(), releaseVersion);
+        Information("Building solution {0} v{1}", solution.GetFilenameWithoutExtension(), buildContext.ReleaseVersion);
 
         DotNetCoreBuild(solution.FullPath, new DotNetCoreBuildSettings()
         {
-            Configuration = configuration,
-            MSBuildSettings = GetMSBuildSettings(releaseVersion)
+            Configuration = buildContext.Configuration,
+            MSBuildSettings = new DotNetCoreMSBuildSettings()
+                .SetVersion(buildContext.ReleaseVersion)
+                .SetMaxCpuCount(buildContext.UseAsManyProcessesAsThereAreAvailableCPUs)
         });
     }
 });
 
-Task("Run tests")
-    .Does(() =>
+Task("Run_tests")
+    .Does<BuildContext>(buildContext =>
 {
-    var xunitArgs = "-nobuild -configuration " + configuration;
-
-    var testProjects = GetFiles("./src/**/*.Tests.csproj");
-    foreach(var testProject in testProjects)
+    foreach(var testProject in buildContext.TestProjects)
     {
-        Information("Testing project {0} with args {1}", testProject.GetFilenameWithoutExtension(), xunitArgs);
+        Information("Testing project {0}", testProject.GetFilenameWithoutExtension());
 
-        DotNetCoreTool(testProject.FullPath, "xunit", xunitArgs);
+        DotNetCoreTest(testProject.FullPath, new DotNetCoreTestSettings
+        {
+            Configuration = buildContext.Configuration,
+            NoBuild = true,
+            NoRestore = true
+        });
     }
 });
 
 Task("Package")
-    .Does(() =>
+    .Does<BuildContext>(buildContext =>
 {
-    var projects = GetFiles("./src/**/*.csproj");
-    foreach(var project in projects)
+    foreach(var project in buildContext.NonTestProjects)
     {
-        var projectDirectory = project.GetDirectory().FullPath;
-        if(projectDirectory.EndsWith("Tests")) continue;
-
-        Information("Packaging project {0} v{1}", project.GetFilenameWithoutExtension(), releaseVersion);
+        Information("Packaging project {0} v{1}", project.GetFilenameWithoutExtension(), buildContext.ReleaseVersion);
 
         DotNetCorePack(project.FullPath, new DotNetCorePackSettings {
-            Configuration = configuration,
-            OutputDirectory = artifactsDir,
+            Configuration = buildContext.Configuration,
+            OutputDirectory = buildContext.ArtifactsDir,
             NoBuild = true,
-            MSBuildSettings = GetMSBuildSettings(releaseVersion)
+            NoRestore = true,
+            MSBuildSettings = new DotNetCoreMSBuildSettings()
+                .SetVersion(buildContext.ReleaseVersion)
         });
     }
 });
 
 Task("Release")
-    .WithCriteria(shouldRelease)
-    .WithCriteria(() => changesDetectedSinceLastRelease)
-    .Does(() =>
+    .WithCriteria<BuildContext>((_, buildContext) =>
+        buildContext.IsRunningOnAppveyorMasterBranch,
+        "Skipped as build not triggered by Appveyor 'master' branch commit"
+    )
+    .WithCriteria<BuildContext>((_, buildContext) =>
+        buildContext.HasReleaseVersionChanged,
+        "Skipped as release version has not changed"
+    )
+    .WithCriteria<BuildContext>((_, buildContext) =>
+        buildContext.IsRunningOnWindows,
+        "Skipped as release was triggered by a linux build"
+    )
+    .Does<BuildContext>(buildContext =>
 {
-    Information("Releasing v{0}", releaseVersion);
+    Information("Releasing v{0}", buildContext.ReleaseVersion);
     Information("Updating CHANGELOG.md");
     Information("Creating github release");
     Information("Pushing to NuGet");
@@ -185,30 +180,63 @@ Task("Release")
 // EXECUTION
 ///////////////////////////////////////////////////////////////////////////////
 
-RunTarget(target);
+RunTarget(buildContext.Target);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helpers
 ///////////////////////////////////////////////////////////////////////////////
 
-string ExtractNextSemanticVersionNumber(string[] semanticReleaseOutput)
+public class BuildContext
 {
-    var extractRegEx = new System.Text.RegularExpressions.Regex("^.+next release version is (?<SemanticVersionNumber>.*)$");
+    public const string DefaultReleaseNumber = "1.0.0";
 
-    return semanticReleaseOutput
-        .Select(line => extractRegEx.Match(line).Groups["SemanticVersionNumber"].Value)
-        .Where(line => !string.IsNullOrWhiteSpace(line))
-        .SingleOrDefault();
-}
+    public string ProjectName { get; }
+    public string Configuration { get; }
+    public string Target { get; }
+    public string ArtifactsDir { get; }
+    public bool IsRunningOnAppveyorMasterBranch { get; }
+    public FilePathCollection Solutions { get; }
+    public FilePathCollection TestProjects { get; }
+    public FilePathCollection NonTestProjects { get; }
 
-DotNetCoreMSBuildSettings GetMSBuildSettings(string releaseVersion) {
-    var assemblyVersion = $"{releaseVersion}.0";
+    // 0 = use as many processes as there are available CPUs to build the project
+    // see: https://develop.cakebuild.net/api/Cake.Common.Tools.MSBuild/MSBuildSettings/60E763EA
+    public int UseAsManyProcessesAsThereAreAvailableCPUs { get; } = 0;
 
-    return new DotNetCoreMSBuildSettings()
-        .WithProperty("Version", assemblyVersion)
-        .WithProperty("AssemblyVersion", assemblyVersion)
-        .WithProperty("FileVersion", assemblyVersion)
-        // 0 = use as many processes as there are available CPUs to build the project
-        // see: https://develop.cakebuild.net/api/Cake.Common.Tools.MSBuild/MSBuildSettings/60E763EA
-        .SetMaxCpuCount(0);
+    public string ReleaseVersion { get; private set; } = DefaultReleaseNumber;
+    public bool HasReleaseVersionChanged { get; private set; }
+    public bool IsRunningOnWindows { get; private set; }
+
+    public BuildContext(string projectName, ICakeContext context)
+    {
+        ProjectName = projectName;
+        Target = context.Argument<string>("target", "Default");
+        Configuration = context.Argument<string>("configuration", "Release");
+
+        IsRunningOnWindows = context.IsRunningOnWindows();
+        IsRunningOnAppveyorMasterBranch = StringComparer.OrdinalIgnoreCase.Equals(
+            "master",
+            context.BuildSystem().AppVeyor.Environment.Repository.Branch
+        );
+
+        ArtifactsDir =  context.Directory("./artifacts");
+        Solutions = context.GetFiles("./src/*.sln");
+        TestProjects = context.GetFiles("./src/**/*.Tests.csproj");
+        NonTestProjects = context.GetFiles("./src/**/*.csproj") - TestProjects;
+    }
+
+    public bool SetReleaseVersionFrom(string[] semanticReleaseOutput)
+    {
+        var extractRegEx = new System.Text.RegularExpressions.Regex("^.+next release version is (?<SemanticVersionNumber>.*)$");
+
+        var nextReleaseNumber = semanticReleaseOutput
+            .Select(line => extractRegEx.Match(line).Groups["SemanticVersionNumber"].Value)
+            .Where(line => !string.IsNullOrWhiteSpace(line))
+            .SingleOrDefault();
+
+        HasReleaseVersionChanged = nextReleaseNumber != null;
+        ReleaseVersion = nextReleaseNumber ?? DefaultReleaseNumber;
+
+        return HasReleaseVersionChanged;
+    }
 }

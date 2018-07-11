@@ -1,7 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <!-- Nuget: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
+  <PropertyGroup>
     <Authors>Michael Wolfenden</Authors>
     <Description>A set of aliases for Cake for running Npx commands</Description>
     <PackageProjectUrl>https://github.com/michael-wolfenden/Cake.Npx</PackageProjectUrl>
@@ -11,9 +15,21 @@
     <PackageIconUrl>https://cdn.rawgit.com/cake-contrib/graphics/a5cf0f881c390650144b2243ae551d5b9f836196/png/cake-contrib-medium.png</PackageIconUrl>
     <PackageTags>cake npx cake-build</PackageTags>
   </PropertyGroup>
+  <!-- End Nuget -->
 
   <ItemGroup>
-    <PackageReference Include="Cake.Core" Version="0.26.0" />
+    <PackageReference Include="Cake.Core" Version="0.28.0" PrivateAssets="All" />
   </ItemGroup>
+
+  <!-- Sourcelink: https://github.com/dotnet/sourcelink/ -->
+  <PropertyGroup>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-62925-02" PrivateAssets="All" />
+  </ItemGroup>
+  <!-- End Sourcelink -->
 
 </Project>
