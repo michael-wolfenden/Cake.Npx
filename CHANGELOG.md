@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/michael-wolfenden/Cake.Npx/compare/v1.2.0...v1.3.0) (2018-07-11)
+
+
+### Features
+
+* **cake:** upgrade Cake.Core to 0.28.0 ([55fd6b5](https://github.com/michael-wolfenden/Cake.Npx/commit/55fd6b5))
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/michael-wolfenden/Cake.Npx/compare/v1.1.0...v1.2.0) (2018-03-01)
 
