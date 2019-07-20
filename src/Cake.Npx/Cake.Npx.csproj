@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -12,13 +12,13 @@
     <RepositoryUrl>https://github.com/michael-wolfenden/Cake.Npx</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/michael-wolfenden/Cake.Npx/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType></RepositoryType>
-    <PackageIconUrl>https://cdn.rawgit.com/cake-contrib/graphics/a5cf0f881c390650144b2243ae551d5b9f836196/png/cake-contrib-medium.png</PackageIconUrl>
+    <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
     <PackageTags>cake npx cake-build</PackageTags>
   </PropertyGroup>
   <!-- End Nuget -->
 
   <ItemGroup>
-    <PackageReference Include="Cake.Core" Version="0.28.0" PrivateAssets="All" />
+    <PackageReference Include="Cake.Core" Version="0.33.0" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Sourcelink: https://github.com/dotnet/sourcelink/ -->
