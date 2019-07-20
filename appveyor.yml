@@ -10,9 +10,9 @@ environment:
   # semantic-version requires node > 8.3
   nodejs_version: 10.3.0
   GITHUB_TOKEN:
-    secure: p0GrMwBfnOtyKmChaxAbTUnx2uZQ+vwMdVCVNjMUhVNgzWukUHBOcs2XGR0uQNlf
+    secure: ZhdsObjghVcwzZqGsEHjTfReMGau+E9jzdkxuSJ5UhKutuedyTsvp9LT9IXC8wtX
   NUGET_TOKEN:
-    secure: HG2hrWYW66cORRkypXxoGtSjM6OV+Lm8Qxl/6vxX6JobeMe0Nrdd09ritNUIUaty
+    secure: ObcPd/4ywYxsfxl/yi0NBkrmzWyzu1OylXYTbbvZIKqJcy5+YlBwjdjDTrsZzaEn
 
 install:
   - cmd: powershell Install-Product node $env:nodejs_version
