@@ -9,10 +9,10 @@ var projectName = "Cake.Npx";
 var buildContext = new BuildContext(projectName, Context);
 
 Action<NpxSettings> requiredSemanticVersionPackages = settings => settings
-    .AddPackage("semantic-release@15.6.3")
-    .AddPackage("@semantic-release/changelog@2.1.1")
-    .AddPackage("@semantic-release/git@6.0.1")
-    .AddPackage("@semantic-release/exec@2.2.4");
+    .AddPackage("semantic-release@15.13.21")
+    .AddPackage("@semantic-release/changelog@3.0.4")
+    .AddPackage("@semantic-release/git@7.0.16")
+    .AddPackage("@semantic-release/exec@3.3.6");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
