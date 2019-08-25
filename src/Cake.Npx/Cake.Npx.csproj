@@ -9,11 +9,11 @@
     <Authors>Michael Wolfenden</Authors>
     <Description>A set of aliases for Cake for running Npx commands</Description>
     <PackageProjectUrl>https://github.com/michael-wolfenden/Cake.Npx</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/michael-wolfenden/Cake.Npx</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/michael-wolfenden/Cake.Npx/blob/master/LICENSE</PackageLicenseUrl>
-    <RepositoryType></RepositoryType>
+    <RepositoryUrl>https://github.com/michael-wolfenden/Cake.Npx.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
     <PackageTags>cake npx cake-build</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <!-- End Nuget -->
 
