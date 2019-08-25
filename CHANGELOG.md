@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/michael-wolfenden/Cake.Npx/compare/v1.4.0...v1.5.0) (2019-08-25)
+
+
+### Features
+
+* Allow setting npx's quiet flag via settings ([2d8123b](https://github.com/michael-wolfenden/Cake.Npx/commit/2d8123b))
+
 # [1.4.0](https://github.com/michael-wolfenden/Cake.Npx/compare/v1.3.0...v1.4.0) (2019-07-20)
 
 
