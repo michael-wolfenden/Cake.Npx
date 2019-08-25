@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/michael-wolfenden/Cake.Npx/compare/v1.5.0...v1.6.0) (2019-08-25)
+
+
+### Features
+
+* Publish symbol packages to nuget ([d6e381f](https://github.com/michael-wolfenden/Cake.Npx/commit/d6e381f))
+
 # [1.5.0](https://github.com/michael-wolfenden/Cake.Npx/compare/v1.4.0...v1.5.0) (2019-08-25)
 
 
