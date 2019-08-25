@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cake.Core;
+using Cake.Core.Configuration;
 using Cake.Core.IO;
 using Cake.Testing;
 using Cake.Testing.Fixtures;
@@ -40,7 +41,8 @@ namespace Cake.Npx.Tests
                 ProcessRunner,
                 Substitute.For<IRegistry>(),
                 Tools,
-                Substitute.For<ICakeDataService>()
+                Substitute.For<ICakeDataService>(),
+                Substitute.For<ICakeConfiguration>()
             );
 
             action(context);

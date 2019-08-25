@@ -10,7 +10,7 @@ namespace Cake.Npx.Tests
 {
     public class NpxAliasesTests
     {
-    [Fact]
+        [Fact]
         public void Should_add_command()
         {
             var result = new NpxFixture().Execute(context =>
@@ -106,6 +106,20 @@ namespace Cake.Npx.Tests
         }
 
         [Fact]
+        public void Should_add_quiet_flag_to_arguments()
+        {
+            var result = new NpxFixture().Execute(context =>
+            {
+                context.Npx(
+                    "command",
+                    settings => settings.Quiet()
+                );
+            });
+
+            result.Args.Should().Be("--quiet command");
+        }
+
+        [Fact]
         public void Should_add_all_arguments()
         {
             var result = new NpxFixture().Execute(context =>
@@ -118,10 +132,11 @@ namespace Cake.Npx.Tests
                         .AddPackage("a package")
                         .AddPackage("another package")
                         .IgnoringExisting()
+                        .Quiet()
                 );
             });
 
-            result.Args.Should().Be("-p \"a package\" -p \"another package\" --ignore-existing command --argument");
+            result.Args.Should().Be("--quiet -p \"a package\" -p \"another package\" --ignore-existing command --argument");
         }
 
         [Fact]

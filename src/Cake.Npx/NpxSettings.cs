@@ -42,9 +42,16 @@ namespace Cake.Npx
         public HashSet<string> Packages { get; }
 
         /// <summary>
-        /// Gets the list of packages which should be installed.
+        /// Instruct npx not to look in $PATH, or in the current package's node_modules/.bin for an
+        /// existing version before deciding whether to install
         /// </summary>
         public bool IgnoreExisting { get; private set; }
+
+        /// <summary>
+        /// Suppressed any output from npx itself (progress bars, error messages, install reports).
+        /// Subcommand output itself will not be silenced.
+        /// </summary>
+        public bool IsQuiet { get; private set; }
 
         /// <summary>
         /// Install a package by name.
@@ -73,11 +80,27 @@ namespace Cake.Npx
         }
 
         /// <summary>
+        /// Suppressed any output from npx itself (progress bars, error messages, install reports).
+        /// Subcommand output itself will not be silenced.
+        /// </summary>
+        /// <returns>The settings instance with quiet set.</returns>
+        public NpxSettings Quiet()
+        {
+            IsQuiet = true;
+            return this;
+        }
+
+        /// <summary>
         /// Evaluates the settings and writes them to <paramref name="arguments"/>.
         /// </summary>
         /// <param name="arguments">The argument builder into which the settings should be written.</param>
         public void Evaluate(ProcessArgumentBuilder arguments)
         {
+            if (IsQuiet)
+            {
+                arguments.Append("--quiet");
+            }
+
             foreach (var package in Packages)
             {
                 arguments.AppendSwitchQuoted("-p", package);
