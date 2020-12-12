@@ -5,6 +5,7 @@ using Cake.Core.IO;
 
 namespace Cake.Npx
 {
+    [CakeAliasCategory("Npm")]
     public static class NpxAliases
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command)
@@ -36,12 +38,13 @@ namespace Cake.Npx
         /// <code>
         /// <![CDATA[
         ///     string[] redirectedStandardOutput = null;
-        /// 
+        ///
         ///     Npx("semantic-release",out redirectedStandardOutput);
         /// ]]>
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -63,6 +66,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -81,12 +85,13 @@ namespace Cake.Npx
         /// <code>
         /// <![CDATA[
         ///     string[] redirectedStandardOutput = null;
-        /// 
+        ///
         ///     Npx("semantic-release","--dry-run", out redirectedStandardOutput);
         /// ]]>
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -109,6 +114,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -131,7 +137,7 @@ namespace Cake.Npx
         /// <code>
         /// <![CDATA[
         ///     string[] redirectedStandardOutput = null;
-        /// 
+        ///
         ///     Npx("semantic-release",
         ///         args => args.Append("--dry-run"),
         ///         out redirectedStandardOutput);
@@ -139,6 +145,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -165,6 +172,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -183,7 +191,7 @@ namespace Cake.Npx
         /// <code>
         /// <![CDATA[
         ///     string[] redirectedStandardOutput = null;
-        /// 
+        ///
         ///     Npx("semantic-release",
         ///         settings => settings.AddPackage("@semantic-release/git"),
         ///         out redirectedStandardOutput);
@@ -191,6 +199,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -220,6 +229,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -244,7 +254,7 @@ namespace Cake.Npx
         /// <code>
         /// <![CDATA[
         ///     string[] redirectedStandardOutput = null;
-        /// 
+        ///
         ///     Npx("semantic-release",
         ///         "--dry-run",
         ///         settings => settings.AddPackage("@semantic-release/git"),
@@ -253,6 +263,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -283,6 +294,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
@@ -307,7 +319,7 @@ namespace Cake.Npx
         /// <code>
         /// <![CDATA[
         ///     string[] redirectedStandardOutput = null;
-        /// 
+        ///
         ///     Npx("semantic-release",
         ///         args => args.Append("--dry-run"),
         ///         settings => settings.AddPackage("@semantic-release/git"),
@@ -316,6 +328,7 @@ namespace Cake.Npx
         /// </code>
         /// </example>
         [CakeMethodAlias]
+        [CakeAliasCategory("Npx")]
         public static void Npx(
             this ICakeContext context,
             string command,
