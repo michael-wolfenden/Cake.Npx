@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/michael-wolfenden/Cake.Npx/compare/v1.6.0...v1.7.0) (2021-11-01)
+
+
+### Features
+
+* Upgrade Cake.Core reference to 1.0.0 ([#11](https://github.com/michael-wolfenden/Cake.Npx/issues/11)) ([e17724b](https://github.com/michael-wolfenden/Cake.Npx/commit/e17724b6fe6d8e4b5ea97d90793442c723c52d74))
+
 # [1.6.0](https://github.com/michael-wolfenden/Cake.Npx/compare/v1.5.0...v1.6.0) (2019-08-25)
 
 
