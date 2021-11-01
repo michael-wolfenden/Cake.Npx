@@ -11,10 +11,13 @@
     <PackageProjectUrl>https://github.com/michael-wolfenden/Cake.Npx</PackageProjectUrl>
     <RepositoryUrl>https://github.com/michael-wolfenden/Cake.Npx.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageIconUrl>https://cdn.jsdelivr.net/gh/cake-contrib/graphics/png/cake-contrib-medium.png</PackageIconUrl>
+    <PackageIcon>cake-contrib-medium.png</PackageIcon>
     <PackageTags>cake npx cake-build</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\cake-contrib-medium.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
   <!-- End Nuget -->
 
   <ItemGroup>
